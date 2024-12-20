@@ -1,0 +1,298 @@
+
+<!--
+    Copyright 2023 Google LLC
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        https://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+  -->
+  <!DOCTYPE html>
+  <html lang="zh-TW">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>新增地點</title>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      <link rel="stylesheet" type="text/css" href="./style.css" />
+      <!--劈哩啪啦引用地圖並獲得地址的東西們-->
+      <script type="module">
+        "use strict";
+        import {APILoader} from 'https://unpkg.com/@googlemaps/extended-component-library@0.6';
+  
+        const CONFIGURATION = {
+          "ctaTitle": "Checkout",
+          "mapOptions": {"center":{"lat":25.04827435783608,"lng":121.51703347806429},"fullscreenControl":false,"mapTypeControl":false,"streetViewControl":false,"zoom":13,"zoomControl":true,"maxZoom":22,"mapId":""},
+          "mapsApiKey": "AIzaSyD8i4w_-x1elZWlPdZqR4vze7bP4bi8ZhE",
+          "capabilities": {"addressAutocompleteControl":true,"mapDisplayControl":true,"ctaControl":false}
+        };
+        const SHORT_NAME_ADDRESS_COMPONENT_TYPES =
+        new Set(['street_number', 'administrative_area_level_1', 'postal_code']);
+
+        const ADDRESS_COMPONENT_TYPES_IN_FORM = [
+        'location'
+        ];
+
+        function getFormInputElement(componentType) {
+        return document.getElementById(`${componentType}-input`);
+        }
+
+        function fillInAddress(place) {
+        function getComponentName(componentType) {
+            for (const component of place.address_components || []) {
+            if (component.types[0] === componentType) {
+                return SHORT_NAME_ADDRESS_COMPONENT_TYPES.has(componentType) ?
+                    component.short_name :
+                    component.long_name;
+            }
+            }
+            return '';
+        }
+
+        function getComponentText(componentType) {
+            return (componentType === 'location') ?
+                `${getComponentName('street_number')} ${getComponentName('route')}` :
+                getComponentName(componentType);
+        }
+
+        for (const componentType of ADDRESS_COMPONENT_TYPES_IN_FORM) {
+            getFormInputElement(componentType).value = getComponentText(componentType);
+        }
+        }
+
+        function renderAddress(place) {
+        const mapEl = document.querySelector('gmp-map');
+        const markerEl = document.querySelector('gmp-advanced-marker');
+
+        if (place.geometry && place.geometry.location) {
+            mapEl.center = place.geometry.location;
+            markerEl.position = place.geometry.location;
+        } else {
+            markerEl.position = null;
+        }
+        }
+
+        async function initMap() {
+        const {SearchBox} = await APILoader.importLibrary('places');
+        const mapOptions = CONFIGURATION.mapOptions;
+        mapOptions.mapId = mapOptions.mapId || 'DEMO_MAP_ID';
+        mapOptions.center = mapOptions.center || {lat: 25.04827435783608, lng: 121.51703347806429};
+
+        await customElements.whenDefined('gmp-map');
+        const mapElement = document.querySelector('gmp-map');
+        mapElement.innerMap.setOptions(mapOptions);
+
+        const inputElement = document.getElementById('location-input');
+        const searchBox = new SearchBox(inputElement, {
+            types: ['establishment'],
+            fields: ['address_components', 'geometry', 'name']
+        });
+
+        const markers = [];
+
+        // 地圖點擊事件，更新輸入框為地標名稱
+        mapElement.innerMap.addListener('click', async (event) => {
+            const geocoder = new google.maps.Geocoder();
+            const response = await geocoder.geocode({ location: event.latLng });
+
+            if (response.results[0]) {
+            const place = response.results[0];
+
+            // 嘗試獲取地標名稱
+            const placeName = place.name || place.formatted_address;
+            inputElement.value = placeName;
+
+            // 更新標記
+            markers.forEach(marker => marker.setMap(null));
+            markers.length = 0;
+
+            const marker = new google.maps.Marker({
+                map: mapElement.innerMap,
+                position: event.latLng,
+            });
+            markers.push(marker);
+
+            renderAddress(place);
+            } else {
+            window.alert('No results found for this location.');
+            }
+        });
+
+        // 設置搜尋框結果的監聽器
+        searchBox.addListener('places_changed', () => {
+            const places = searchBox.getPlaces();
+            if (!places || places.length === 0) {
+              window.alert('No places found for the input.');
+              return;
+            }
+
+            // 清除舊的標記
+            markers.forEach(marker => marker.setMap(null));
+            markers.length = 0;
+
+            const bounds = new google.maps.LatLngBounds();
+
+            places.forEach(place => {
+            if (!place.geometry || !place.geometry.location) {
+                console.error('Place does not have geometry:', place);
+                return;
+            }
+
+            // 創建新標記
+            const marker = new google.maps.Marker({
+                map: mapElement.innerMap,
+                title: place.name,
+                position: place.geometry.location,
+            });
+            markers.push(marker);
+
+            // 設置輸入框為地點名稱
+            inputElement.value = place.name || place.formatted_address;
+            // 展示地址資訊
+            renderAddress(place);
+            fillInAddress(place);
+
+            if (place.geometry.viewport) {
+              bounds.union(place.geometry.viewport);
+            }else {
+              bounds.extend(place.geometry.location);
+            }
+            });
+
+            mapElement.innerMap.fitBounds(bounds);
+        });
+        }
+
+        initMap();
+      </script>
+    </head>
+    <body>
+      <br>
+      
+      <br>
+      <gmpx-api-loader key="AIzaSyD8i4w_-x1elZWlPdZqR4vze7bP4bi8ZhE" solution-channel="GMP_QB_addressselection_v3_cAB">
+      </gmpx-api-loader>
+      <gmpx-split-layout row-layout-max-width="700">
+        <div class="panel" slot="fixed">
+          <div>
+            <img class="sb-title-icon" src="https://fonts.gstatic.com/s/i/googlematerialicons/location_pin/v5/24px.svg" alt=""><span class="sb-title">新增地點</span>
+          </div>
+          <select id="category" style="padding: 8px;">
+              <option value="" disabled selected></option>
+              <option value="brunch">早午餐</option>
+              <option value="meal">正餐</option>
+              <option value="snack">小吃</option>
+              <option value="cafe">咖啡</option>
+              <option value="drinks">飲料</option>
+              <option value="bar">酒吧</option>
+              <option value="night">宵夜</option>
+              <option value="other">其他</option>
+          </select>
+          <input type="text" placeholder="地址" id="location-input"/>
+          <input type="text" placeholder="備註" id="comment"/>
+          <div class="rate">
+            評分
+            <input type="radio" id="rating10" name="rating" value="10" /><label for="rating10" title="5 stars"></label>
+            <input type="radio" id="rating9" name="rating" value="9" /><label class="half" for="rating9" title="4 1/2 stars"></label>
+            <input type="radio" id="rating8" name="rating" value="8" /><label for="rating8" title="4 stars"></label>
+            <input type="radio" id="rating7" name="rating" value="7" /><label class="half" for="rating7" title="3 1/2 stars"></label>
+            <input type="radio" id="rating6" name="rating" value="6" /><label for="rating6" title="3 stars"></label>
+            <input type="radio" id="rating5" name="rating" value="5" /><label class="half" for="rating5" title="2 1/2 stars"></label>
+            <input type="radio" id="rating4" name="rating" value="4" /><label for="rating4" title="2 stars"></label>
+            <input type="radio" id="rating3" name="rating" value="3" /><label class="half" for="rating3" title="1 1/2 stars"></label>
+            <input type="radio" id="rating2" name="rating" value="2" /><label for="rating2" title="1 star"></label>
+            <input type="radio" id="rating1" name="rating" value="1" /><label class="half" for="rating1" title="1/2 star"></label>
+            <input>
+          </div>
+          <button class="button add-button" onclick="createEntry">新增</button>
+          <button class="button cancel-button" onclick="cancelAction">取消</button>
+        </div>
+        
+
+        <gmp-map slot="main"><gmp-advanced-marker></gmp-advanced-marker></gmp-map>
+      </gmpx-split-layout>
+
+      <!--api gateway post get-->
+      <script>
+        //**這裡記得要改**//
+        const apiUrl = 'api-gateway'; // 替換成你的 API URL
+    
+        // Function to create a new entry (POST)
+        async function createEntry() {
+            const category = document.getElementById('category').value;
+            const location = document.getElementById('location-input').value.trim();
+            const comment = document.getElementById('comment').value.trim();
+            const rating = document.querySelector('input[name="rating"]:checked')?.value || null;
+    
+            if (!category || !location) {
+                document.getElementById('output').textContent = '請選擇分類或填寫地址！';
+                return;
+            }
+    
+            try {
+                // Using Google Maps Geocoding API to get latitude and longitude
+                const geocodeResponse = await fetch(
+                    `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(location)}&key=AIzaSyD8i4w_-x1elZWlPdZqR4vze7bP4bi8ZhE`
+                );
+                const geocodeData = await geocodeResponse.json();
+    
+                if (geocodeData.status !== "OK" || !geocodeData.results.length) {
+                    document.getElementById('output').textContent = '無法取得該地址的經緯度！請確認地址正確。';
+                    return;
+                }
+    
+                const { lat, lng } = geocodeData.results[0].geometry.location;
+    
+                const entry = {
+                    category: category,
+                    location: location,
+                    latitude: lat,
+                    longitude: lng,
+                    comment: comment || "無",
+                    rating: rating ? parseInt(rating) : null // Default to null if no rating
+                };
+    
+                // Sending data to API
+                const response = await fetch(`${apiUrl}/entries`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(entry)
+                });
+    
+                const result = await response.json();
+                document.getElementById('output').textContent = `新增成功！\n${JSON.stringify(result, null, 2)}`;
+            } catch (error) {
+                document.getElementById('output').textContent = `Error: ${error.message}`;
+            }
+        }
+    
+        // Function to cancel the action
+        function cancelAction() {
+            document.getElementById('category').value = '';
+            document.getElementById('location-input').value = '';
+            document.getElementById('comment').value = '';
+            document.querySelector('input[name="rating"]:checked')?.checked = false;
+            document.getElementById('output').textContent = '操作已取消。';
+        }
+    
+        // Function to list all entries (GET)
+        async function getAllEntries() {
+            try {
+                const response = await fetch(`${apiUrl}/entries`);
+                const result = await response.json();
+                document.getElementById('output').textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                document.getElementById('output').textContent = `Error: ${error.message}`;
+            }
+        }
+      </script>
+    
+    </body>
+  </html>

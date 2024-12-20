@@ -1,0 +1,120 @@
+<!--
+*̣̥☆·͙̥‧❅‧̩̥·‧•̥̩̥͙‧·‧̩̥˟͙☃˟͙‧̩̥·‧•̥̩̥͙‧·‧̩̥ ❅‧·͙̥̣☆*̣̥ 
+
+    ⊂_ヽ
+    　 ＼＼ Λ＿Λ
+    　　 ＼( ‘ㅅ' ) 
+    　　　 >　⌒ヽ
+    　　　/ 　 へ＼
+    　　 /　　/　＼＼
+    　　 ﾚ　ノ　　 ヽ_つ
+    　　/　/
+    　 /　/|
+    　(　(ヽ
+    　|　|、＼
+    　| 丿 ＼ ⌒)
+    　| |　　) /
+    `ノ )　　Lﾉ
+❅*⋆⍋*⋆*❅*⋆*⍋⋆*❅*⋆⍋*⋆*❅*⋆*⍋⋆*❅
+-->
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>美食地圖</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <!-- 地圖主要顯示區域 -->
+    <div class="mainmap">
+        <iframe src="MapTab/MarkerCluster.html" width="100%" height="470px" style="border: none;"></iframe>
+    </div>
+
+    <br>
+
+    <!-- 地圖列表顯示區域 -->
+    <div class="list">
+        <iframe id="mapIframe" src="MapTab/maplist.html" width="100%" height="1000vh" style="border: none;"></iframe>
+    </div>
+    
+    <!-- 浮動按鈕區域 -->
+    <div class="floating-buttons">
+        <button id="scrollTop">↑</button>
+        <button id="openForm">+</button>
+    </div>
+
+    <!-- 表單模態視窗覆蓋層 -->
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <!-- 表單模態視窗內容 -->
+    <div class="modal" id="formModal">
+        <iframe src="MapTab/AddressSelection.html" width="700px" height="450px" style="border:none;"></iframe>
+    </div>
+
+    <script>
+        // 返回頁首功能
+        document.getElementById('scrollTop').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // 開啟表單視窗
+        const openFormButton = document.getElementById('openForm');
+        const formModal = document.getElementById('formModal');
+        const modalOverlay = document.getElementById('modalOverlay');
+
+        openFormButton.addEventListener('click', () => {
+            formModal.classList.add('active');
+            modalOverlay.classList.add('active');
+        });
+
+        // 監聽點擊事件
+        modalOverlay.addEventListener('click', () => {
+            formModal.classList.remove('active');
+            modalOverlay.classList.remove('active');
+        });
+
+        // 新增監聽鍵盤事件
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') { // 檢查是否按下了 'Esc' 鍵
+                formModal.classList.remove('active');
+                modalOverlay.classList.remove('active');
+            }
+        });
+
+        //按N可以開啟新增表單
+        document.addEventListener('keydown',(event) => {
+            if (event.key === 'N'){
+                formModal.classList.add('active');
+                modalOverlay.classList.add('active');
+            }
+        })
+        document.addEventListener('keydown',(event) => {
+            if (event.key === 'n'){
+                formModal.classList.add('active');
+                modalOverlay.classList.add('active');
+            }
+        })
+        document.addEventListener('keydown',(event) => {
+            if (event.key === 'ㄙ'){
+                formModal.classList.add('active');
+                modalOverlay.classList.add('active');
+            }
+        })
+
+    </script>
+</body>
+</html>
+<!--
+我要來施把你變可愛的魔法
+    （\ (\
+    (｡• ω•｡)つ—☆ • * ｡
+   ⊂       ノ             • ゜+.
+     し — J            °｡ +*ˊ˙˙)
+                            .·ˊ,·*ˊ"),·*ˊ")
+                           (,·ˊ(,·'* ☆
+我失敗了 因為你已經超級可愛了
+    (\ (\
+c(￣(_ˊ• x •`)_—☆
+
+-->

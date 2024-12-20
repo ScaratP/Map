@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地圖資料展示</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <br>
+    <!-- 分類過濾器 -->
+    <div class="searchbox">
+        <!-- 類別分類下拉式選單 -->
+        <div style="margin: 10px; display: flex; align-items: center; width: 45%;">
+            <h4 for="categorySelect" style="display: block; font-weight: bold;">類別　</h4>
+            <select id="category" style="width: 90%; padding: 16px; border: 1px solid #ccc; border-radius: 4px;">
+              <option value="" disabled selected></option>
+              <option value="brunch">早午餐</option>
+              <option value="meal">正餐</option>
+              <option value="snack">小吃</option>
+              <option value="cafe">咖啡</option>
+              <option value="drinks">飲料</option>
+              <option value="bar">酒吧</option>
+              <option value="night">宵夜</option>
+              <option value="other">其他</option>
+            </select>
+        </div>
+        <!--搜尋框-->
+        <div style="display: flex; align-items: center; width: 45%;">
+            <h4 style="display: block; font-weight: bold;">搜尋　</h4>
+            <input type="text" id="search-bar" placeholder="輸入關鍵字" style="width:90%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        </div>
+        <button id="search-btn" class="button" style="margin: 5px auto;">搜尋</button>
+    </div>
+
+    <!-- 分類過濾按鈕區 -->
+    <div id="filter-container" style="margin: 10px auto;"></div>
+
+    <!-- 資料輸出區域 -->
+    <div id="output">載入中...</div>
+    
+    <script src="getallitems.js"></script>
+</body>
+</html>

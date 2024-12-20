@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="style.css">
+<script src="star.js"></script> <!-- 外部 JavaScript -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+
+<div style="display: flex;">
+   <div class="container">
+       <!-- 分類 -->
+       <div class="item">
+           <span class="label">分類</span>
+           <span id="category" class="value">宵夜</span>
+       </div>
+       <!-- 店家名稱 -->
+       <div class="item">
+           <span class="label">店家名稱</span>
+           <span id="location" class="value">103台灣台北市大同區寧夏路58號3樓</span>
+       </div>
+       <!-- 評分 -->
+       <div class="item">
+           <span class="label">自己評分星數</span>
+           <span id="rating" class="value">7</span> <!-- 這是評分 -->
+           <div id="stars" class="stars"></div> <!-- 星星顯示區域 -->
+       </div>
+       <!-- 備註 -->
+       <div class="item">
+           <span class="label">備註</span>
+           <span id="comment" class="value">就是夜市</span>
+       </div>
+   </div>
+   <div class="map">
+       <iframe 
+           src="https://www.google.com/maps/embed/v1/place?key=AIzaSyD8i4w_-x1elZWlPdZqR4vze7bP4bi8ZhE&q=103台灣台北市大同區寧夏路58號3樓" 
+           width="100%" height="300" frameborder="0" style="border:0;" allowfullscreen>
+       </iframe>
+   </div>
+</div>

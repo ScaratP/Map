@@ -1,0 +1,260 @@
+/* 
+ * Always set the map height explicitly to define the size of the div element
+ * that contains the map. 
+ */
+ #map {
+    height: 100%;
+  }
+  
+  /* 
+   * Optional: Makes the sample page fill the window. 
+   */
+  html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    justify-content: center; 
+    margin: 0 auto;
+    padding: 0;
+    background-color: #f9f9f9;
+  }
+
+  .element{
+    display: flex;
+    height:350px;
+    width: 90%;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .container {
+    margin: 20px auto;
+    padding: 10px 20px;
+    width: 70%;
+    align-content: center;
+  }
+/* 每個項目 */
+  .item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 8px;
+  }
+
+  .label {
+    font-weight: bold;
+    color: #555;
+  }
+
+  
+  .value {
+    color: #000;
+    font-size: 1rem;
+  }
+
+  .sb-title {
+    position: relative;
+    top: -12px;
+    font-family: Roboto, sans-serif;
+    font-weight: 500;
+  }
+
+  .sb-title-icon {
+    position: relative;
+    top: -5px;
+  }
+
+  gmpx-split-layout {
+    height: 400px;
+    width: 700px;
+  }
+
+  gmpx-split-layout:not(:defined) {
+    visibility: hidden;
+  }
+
+  .panel {
+    background: white;
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+  }
+
+  .half-input-container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .half-input {
+    max-width: 120px;
+  }
+
+  h2 {
+    margin: 0;
+    font-family: Roboto, sans-serif;
+  }
+
+  input {
+    height: 30px;
+    border: 0;
+    border-bottom: 1px solid black;
+    font-size: 14px;
+    font-family: Roboto, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+  }
+
+  input:focus::placeholder {
+    color: white;
+  }
+
+
+  h1 {
+    font-size: 2em;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Ratings widget */
+  .rate {
+    display: inline-block;
+    border: 0;
+  }
+  /* Hide radio */
+  .rate > input {
+    display: none;
+  }
+  /* Order correctly by floating highest to the right */
+  .rate > label {
+    float: right;
+  }
+  /* The star of the show */
+  .rate > label:before {
+    display: inline-block;
+    font-size: 1.1rem;
+    padding: 0.3rem 0.2rem;
+    margin: 0;
+    cursor: pointer;
+    font-family: FontAwesome;
+    content: "\f005 "; /* full star */
+  }
+  /* Zero stars rating */
+  .rate > label:last-child:before {
+    content: "\f006 "; /* empty star outline */
+  }
+  /* Half star trick */
+  .rate .half:before {
+    content: "\f089 "; /* half star no outline */
+    position: absolute;
+    padding-right: 0;
+  }
+  /* Click + hover color */
+  input:checked ~ label, /* color current and previous stars on checked */
+  label:hover, label:hover ~ label {
+    color: #73b100;
+  } /* color previous stars on hover */
+  
+  /* Hover highlights */
+  input:checked + label:hover, input:checked ~ label:hover, /* highlight current and previous stars */
+  input:checked ~ label:hover ~ label, /* highlight previous selected stars for new rating */
+  label:hover ~ input:checked ~ label /* highlight previous selected stars */ {
+    color: #a6e72d;
+  }
+  
+
+  /* 基本按鈕樣式 */
+  .button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    color: #ffffff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+.add-button {
+    background-color: #28a745;
+}
+
+.add-button:hover {
+    background-color: #218838;
+}
+
+.cancel-button {
+    background-color: #dc3545;
+}
+
+.cancel-button:hover {
+    background-color: #c82333;
+}
+
+/* 地圖樣式 */
+.map {
+  margin: 20px auto;
+  max-width: 500px;
+}
+
+iframe {
+  border-radius: 8px;
+}
+
+.searchbox{
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  width: 95%;
+  margin: 10px auto;
+  display: flex;
+  align-items: center;
+}
+
+.stars {
+  display: inline-block;
+}
+
+.star-filled, .star-empty, .star-half {
+  font-size: 30px; /* Adjust size */
+  margin-right: 5px;
+}
+
+.star-filled, .star-half {
+  color: gold;
+}
+
+.star-empty {
+  color: lightgray;
+}
+
+.star-half {
+  position: relative;
+}
+
+.star-half:after {
+  content: '\f089'; /* Ensure Font Awesome half-star icon is displayed */
+  font-family: "Font Awesome 5 Free"; /* Ensure using correct font family */
+  
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  overflow: hidden;
+  color: gold;
+}

@@ -1,0 +1,40 @@
+**關於主畫面**
+index.html和index.css是主畫面
+最上面中間的地圖是引用MapTab/MarkerCluster.html
+中間下面是引用MapTab/maplist.html
+maplist.html需要連到資料庫才能顯示出來，沒連上會顯示錯誤
+maplist.html呈現出來的畫面可以參考listtest.html
+右下角的+可以叫出新增表單
+那是引用AddressSelection.html
+按N也可以叫出表單
+按esc可以關閉表單
+
+**關於list列出**
+maplist.html讀取資料的方式在getallitems.js裡
+有需要可以對 getallitems.js更改沒問題
+
+**關於大地圖**
+點擊地圖上的點，旁邊應該會跳出小視窗顯示該點的資訊
+包括分類、地點、備註、評分
+按esc或空白處可以關閉小視窗
+
+**關於新增表單**
+
+const entry = {
+    category: category,
+    location: location,
+    latitude: lat,
+    longitude: lng,
+    comment: comment || "無",
+    rating: rating ? parseInt(rating) : null // Default to null if no rating
+};
+這是新增進資料庫的形式
+
+**關於star.js**
+star.js是評分的星星
+是顯示在maplist.html的那個星星
+
+**關於style.css**
+裡面的顏色都可以改
+顏色都是我叫GPT生給我的所以很飽和
+可以盡情改沒問題
